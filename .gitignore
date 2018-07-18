@@ -103,3 +103,8 @@ $RECYCLE.BIN/
 
 # Vi
 *.swp
+
+# Recorder
+Assets/Unity Technologies/
+Assets/Unity Technologies.meta
+Recordings/
