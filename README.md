@@ -1,3 +1,18 @@
+Pcx4D - 4D Point Cloud Importer/Renderer for Unity
+================================================
+
+**Pcx** is a fork of a Poinc Cloud library called Pcx by Keijiro Takahashi (https://github.com/keijiro/Pcx) for importing 4-dimensional point cloud data.
+
+Functionalities
+---------------
+
+- Import and Render 4D PLY files (support only ComputeBuffer rendering. See below for more details)
+
+- Support for PLY ASCII format
+
+Below is the original README.md for Pcx:
+----------------------------------------------------------------------------
+
 Pcx - Point Cloud Importer/Renderer for Unity
 =============================================
 

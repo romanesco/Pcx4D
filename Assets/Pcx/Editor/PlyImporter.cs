@@ -1,3 +1,4 @@
+// 4D extension of Pcx by Hiroyuki Inou:
 // Pcx - Point cloud importer & renderer for Unity
 // https://github.com/keijiro/Pcx
 
@@ -18,7 +19,7 @@ namespace Pcx
     {
         #region ScriptedImporter implementation
 
-        public enum ContainerType { Mesh, ComputeBuffer  }
+        public enum ContainerType { Mesh, ComputeBuffer }
 
         [SerializeField] ContainerType _containerType;
 
@@ -47,14 +48,31 @@ namespace Pcx
                 // ComputeBuffer container
                 // Create a prefab with PointCloudRenderer.
                 var gameObject = new GameObject();
-                var data = ImportAsPointCloudData(context.assetPath);
+                try
+                {
+                    var stream = File.Open(context.assetPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    var header = ReadDataHeader(new StreamReader(stream));
+                    if (header.is4D) {
+                        var data = ImportAsPointCloudData4D(context.assetPath, header, stream);
+                        var renderer = gameObject.AddComponent<PointCloud4DRenderer>();
+                        renderer.sourceData = data;
 
-                var renderer = gameObject.AddComponent<PointCloudRenderer>();
-                renderer.sourceData = data;
+                        context.AddObjectToAsset("prefab", gameObject);
+                        if (data != null) context.AddObjectToAsset("data", data);
+                    } else {
+                        var data = ImportAsPointCloudData(context.assetPath, header, stream);
 
-                context.AddObjectToAsset("prefab", gameObject);
-                if (data != null) context.AddObjectToAsset("data", data);
+                        var renderer = gameObject.AddComponent<PointCloudRenderer>();
+                        renderer.sourceData = data;
 
+                        context.AddObjectToAsset("prefab", gameObject);
+                        if (data != null) context.AddObjectToAsset("data", data);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError("Failed importing " + context.assetPath + ". " + e.Message);
+                }
                 context.SetMainObject(gameObject);
             }
         }
@@ -74,9 +92,10 @@ namespace Pcx
 
         #region Internal data structure
 
-        enum DataProperty {
+        enum DataProperty
+        {
             Invalid,
-            X, Y, Z,
+            X, Y, Z, W,
             R, G, B, A,
             Data8, Data16, Data32
         }
@@ -88,6 +107,7 @@ namespace Pcx
                 case DataProperty.X: return 4;
                 case DataProperty.Y: return 4;
                 case DataProperty.Z: return 4;
+                case DataProperty.W: return 4;
                 case DataProperty.R: return 1;
                 case DataProperty.G: return 1;
                 case DataProperty.B: return 1;
@@ -103,6 +123,8 @@ namespace Pcx
         {
             public List<DataProperty> properties = new List<DataProperty>();
             public int vertexCount = -1;
+            public bool is4D = false;
+            public bool isAscii = false;
         }
 
         class DataBody
@@ -126,6 +148,26 @@ namespace Pcx
             }
         }
 
+        class Data4DBody
+        {
+            public List<Vector4> vertices;
+            public List<Color32> colors;
+
+            public Data4DBody(int vertexCount)
+            {
+                vertices = new List<Vector4>(vertexCount);
+                colors = new List<Color32>(vertexCount);
+            }
+
+            public void AddPoint(
+                float x, float y, float z, float w,
+                byte r, byte g, byte b, byte a
+            )
+            {
+                vertices.Add(new Vector4(x, y, z, w));
+                colors.Add(new Color32(r, g, b, a));
+            }
+        }
         #endregion
 
         #region Reader implementation
@@ -136,7 +178,7 @@ namespace Pcx
             {
                 var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
                 var header = ReadDataHeader(new StreamReader(stream));
-                var body = ReadDataBody(header, new BinaryReader(stream));
+                var body = header.isAscii ? ReadDataBodyFromAscii(header, new StreamReader(stream)) : ReadDataBody(header, new BinaryReader(stream));
 
                 var mesh = new Mesh();
                 mesh.name = Path.GetFileNameWithoutExtension(path);
@@ -162,23 +204,22 @@ namespace Pcx
             }
         }
 
-        PointCloudData ImportAsPointCloudData(string path)
+        PointCloudData ImportAsPointCloudData(string path, DataHeader header, Stream stream)
         {
-            try
-            {
-                var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
-                var header = ReadDataHeader(new StreamReader(stream));
-                var body = ReadDataBody(header, new BinaryReader(stream));
-                var data = ScriptableObject.CreateInstance<PointCloudData>();
-                data.Initialize(body.vertices, body.colors);
-                data.name = Path.GetFileNameWithoutExtension(path);
-                return data;
-            }
-            catch (Exception e)
-            {
-                Debug.LogError("Failed importing " + path + ". " + e.Message);
-                return null;
-            }
+            var body = ReadDataBody(header, new BinaryReader(stream));
+            var data = ScriptableObject.CreateInstance<PointCloudData>();
+            data.Initialize(body.vertices, body.colors);
+            data.name = Path.GetFileNameWithoutExtension(path);
+            return data;
+        }
+
+        PointCloudData4D ImportAsPointCloudData4D(string path, DataHeader header, Stream stream)
+        {
+            var body = header.isAscii ? ReadData4DBodyFromAscii(header, new StreamReader(stream)) : ReadData4DBody(header, new BinaryReader(stream));
+            var data = ScriptableObject.CreateInstance<PointCloudData4D>();
+            data.Initialize(body.vertices, body.colors);
+            data.name = Path.GetFileNameWithoutExtension(path);
+            return data;
         }
 
         DataHeader ReadDataHeader(StreamReader reader)
@@ -195,13 +236,15 @@ namespace Pcx
             // Data format: check if it's binary/little endian.
             line = reader.ReadLine();
             readCount += line.Length + 1;
-            if (line != "format binary_little_endian 1.0")
+            if (line == "format ascii 1.0") {
+                data.isAscii = true;
+            } else if (line != "format binary_little_endian 1.0")
                 throw new ArgumentException(
                     "Invalid data format ('" + line + "'). " +
                     "Should be binary/little endian.");
 
             // Read header contents.
-            for (var skip = false;;)
+            for (var skip = false; ;)
             {
                 // Read a line and split it with white space.
                 line = reader.ReadLine();
@@ -234,12 +277,14 @@ namespace Pcx
                     // Parse the property name entry.
                     switch (col[2])
                     {
-                        case "x"    : prop = DataProperty.X; break;
-                        case "y"    : prop = DataProperty.Y; break;
-                        case "z"    : prop = DataProperty.Z; break;
-                        case "red"  : prop = DataProperty.R; break;
+                        case "x": prop = DataProperty.X; break;
+                        case "y": prop = DataProperty.Y; break;
+                        case "z": prop = DataProperty.Z; break;
+                        case "w": prop = DataProperty.W;
+                            data.is4D = true; break;
+                        case "red": prop = DataProperty.R; break;
                         case "green": prop = DataProperty.G; break;
-                        case "blue" : prop = DataProperty.B; break;
+                        case "blue": prop = DataProperty.B; break;
                         case "alpha": prop = DataProperty.A; break;
                     }
 
@@ -296,6 +341,7 @@ namespace Pcx
                         case DataProperty.X: x = reader.ReadSingle(); break;
                         case DataProperty.Y: y = reader.ReadSingle(); break;
                         case DataProperty.Z: z = reader.ReadSingle(); break;
+                        case DataProperty.W: reader.ReadSingle(); break;
 
                         case DataProperty.R: r = reader.ReadByte(); break;
                         case DataProperty.G: g = reader.ReadByte(); break;
@@ -313,6 +359,122 @@ namespace Pcx
 
             return data;
         }
+
+        Data4DBody ReadData4DBody(DataHeader header, BinaryReader reader)
+        {
+            var data = new Data4DBody(header.vertexCount);
+
+            float x = 0, y = 0, z = 0, w = 0;
+            Byte r = 255, g = 255, b = 255, a = 255;
+
+            for (var i = 0; i < header.vertexCount; i++)
+            {
+                foreach (var prop in header.properties)
+                {
+                    switch (prop)
+                    {
+                        case DataProperty.X: x = reader.ReadSingle(); break;
+                        case DataProperty.Y: y = reader.ReadSingle(); break;
+                        case DataProperty.Z: z = reader.ReadSingle(); break;
+                        case DataProperty.W: w = reader.ReadSingle(); break;
+
+                        case DataProperty.R: r = reader.ReadByte(); break;
+                        case DataProperty.G: g = reader.ReadByte(); break;
+                        case DataProperty.B: b = reader.ReadByte(); break;
+                        case DataProperty.A: a = reader.ReadByte(); break;
+
+                        case DataProperty.Data8: reader.ReadByte(); break;
+                        case DataProperty.Data16: reader.BaseStream.Position += 2; break;
+                        case DataProperty.Data32: reader.BaseStream.Position += 4; break;
+                    }
+                }
+
+                data.AddPoint(x, y, z, w, r, g, b, a);
+            }
+
+            return data;
+        }
+
+        DataBody ReadDataBodyFromAscii(DataHeader header, StreamReader reader)
+        {
+            var data = new DataBody(header.vertexCount);
+
+            float x = 0, y = 0, z = 0;
+            Byte r = 255, g = 255, b = 255, a = 255;
+
+            for (var i = 0; i < header.vertexCount; i++)
+            {
+                var line = reader.ReadLine();
+                var col = line.Split();
+                int j = 0;
+                foreach (var prop in header.properties)
+                {
+                    switch (prop)
+                    {
+                        case DataProperty.X: x = float.Parse(col[j]); break;
+                        case DataProperty.Y: y = float.Parse(col[j]); break;
+                        case DataProperty.Z: z = float.Parse(col[j]); break;
+                        case DataProperty.W: break;
+
+                        case DataProperty.R: r = byte.Parse(col[j]); break;
+                        case DataProperty.G: g = byte.Parse(col[j]); break;
+                        case DataProperty.B: b = byte.Parse(col[j]); break;
+                        case DataProperty.A: a = byte.Parse(col[j]); break;
+                            /*
+                            case DataProperty.Data8: reader.ReadByte(); break;
+                            case DataProperty.Data16: reader.BaseStream.Position += 2; break;
+                            case DataProperty.Data32: reader.BaseStream.Position += 4; break;
+                            */
+                    }
+                    j++;
+                }
+
+                data.AddPoint(x, y, z, r, g, b, a);
+            }
+
+            return data;
+        }
+
+        Data4DBody ReadData4DBodyFromAscii(DataHeader header, StreamReader reader)
+        {
+            var data = new Data4DBody(header.vertexCount);
+
+            float x = 0, y = 0, z = 0, w = 0;
+            Byte r = 255, g = 255, b = 255, a = 255;
+
+            for (var i = 0; i < header.vertexCount; i++)
+            {
+                var line = reader.ReadLine();
+                var col = line.Split();
+                int j = 0;
+                foreach (var prop in header.properties)
+                {
+                    switch (prop)
+                    {
+                        case DataProperty.X: x = float.Parse(col[j]); break;
+                        case DataProperty.Y: y = float.Parse(col[j]); break;
+                        case DataProperty.Z: z = float.Parse(col[j]); break;
+                        case DataProperty.W: w = float.Parse(col[j]); break;
+
+                        case DataProperty.R: r = byte.Parse(col[j]); break;
+                        case DataProperty.G: g = byte.Parse(col[j]); break;
+                        case DataProperty.B: b = byte.Parse(col[j]); break;
+                        case DataProperty.A: a = byte.Parse(col[j]); break;
+                        /*
+                        case DataProperty.Data8: reader.ReadByte(); break;
+                        case DataProperty.Data16: reader.BaseStream.Position += 2; break;
+                        case DataProperty.Data32: reader.BaseStream.Position += 4; break;
+                        */
+                    }
+                    j++;
+                }
+
+                data.AddPoint(x, y, z, w, r, g, b, a);
+            }
+
+            return data;
+        }
+
     }
 
     #endregion
