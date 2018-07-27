@@ -18,6 +18,7 @@ struct Attributes
 #else
     float4 position : POSITION;
     half3 color : COLOR;
+    float2 uv2 : TEXCOORD1;
 #endif
 };
 
@@ -56,7 +57,10 @@ Varyings Vertex(Attributes input)
 	float4 pos = mul(_Transform, float4(pos4d.xyz, 1));
 	half3 col = PcxDecodeColor(pt.color);
 #else
-    float4 pos = input.position;
+    float4 pos4d = float4(input.position.xyz, input.uv2.x);
+    pos4d = mul(_Rotation4D, pos4d) + _Translation4D;
+    //pos4d = pos4d + _Translation4D;
+    float4 pos = float4(pos4d.xyz, 1);
     half3 col = input.color;
 #endif
 

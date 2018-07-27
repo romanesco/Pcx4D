@@ -9,6 +9,7 @@ Shader "Point Cloud/Point4D"
         _Tint("Tint", Color) = (0.5, 0.5, 0.5, 1)
         _PointSize("Point Size", Float) = 0.05
         [Toggle] _Distance("Apply Distance", Float) = 1
+        _Translation4D("4D Translation", Vector) = (0, 0, 0, 0)
     }
     SubShader
     {
@@ -32,6 +33,7 @@ Shader "Point Cloud/Point4D"
             {
                 float4 position : POSITION;
                 half3 color : COLOR;
+                float2 uv2 : TEXCOORD1;
             };
 
             struct Varyings
@@ -52,10 +54,10 @@ Shader "Point Cloud/Point4D"
             float4x4 _Transform;
             half _PointSize;
 
-        #if _COMPUTE_BUFFER
             float4x4 _Rotation4D;
             float4 _Translation4D;
 
+        #if _COMPUTE_BUFFER
             StructuredBuffer<Point4D> _PointBuffer;
         #endif
 
@@ -71,7 +73,10 @@ Shader "Point Cloud/Point4D"
                 float4 pos = mul(_Transform, float4(pos4d.xyz, 1));
                 half3 col = PcxDecodeColor(pt.color);
             #else
-                float4 pos = input.position;
+                float4 pos4d = float4(input.position.xyz, input.uv2.x);
+                pos4d = mul(_Rotation4D, pos4d) + _Translation4D;
+                //pos4d = pos4d + _Translation4D;
+                float4 pos = float4(pos4d.xyz, 1);
                 half3 col = input.color;
             #endif
 
@@ -104,5 +109,5 @@ Shader "Point Cloud/Point4D"
             ENDCG
         }
     }
-    CustomEditor "Pcx.PointMaterialInspector"
+    CustomEditor "Pcx.Point4DMaterialInspector"
 }
