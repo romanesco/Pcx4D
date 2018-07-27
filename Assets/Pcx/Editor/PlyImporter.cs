@@ -178,16 +178,31 @@ namespace Pcx
             {
                 var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
                 var header = ReadDataHeader(new StreamReader(stream));
-                var body = header.isAscii ? ReadDataBodyFromAscii(header, new StreamReader(stream)) : ReadDataBody(header, new BinaryReader(stream));
 
                 var mesh = new Mesh();
                 mesh.name = Path.GetFileNameWithoutExtension(path);
 
                 mesh.indexFormat = header.vertexCount > 65535 ?
                     IndexFormat.UInt32 : IndexFormat.UInt16;
-
-                mesh.SetVertices(body.vertices);
-                mesh.SetColors(body.colors);
+                if (header.is4D)
+                {
+                    var body = header.isAscii ? ReadData4DBodyFromAscii(header, new StreamReader(stream)) : ReadData4DBody(header, new BinaryReader(stream));
+                    List<Vector3> vs3 = new List<Vector3>(header.vertexCount);
+                    List<Vector2> uvs = new List<Vector2>(header.vertexCount);
+                    foreach (var vertex in body.vertices) {
+                        vs3.Add((Vector3)vertex);
+                        uvs.Add(new Vector2(vertex.w, 0));
+                    }
+                    mesh.SetVertices(vs3);
+                    mesh.SetUVs(1, uvs);
+                    mesh.SetColors(body.colors);
+                }
+                else
+                {
+                    var body = header.isAscii ? ReadDataBodyFromAscii(header, new StreamReader(stream)) : ReadDataBody(header, new BinaryReader(stream));
+                    mesh.SetVertices(body.vertices);
+                    mesh.SetColors(body.colors);
+                }
 
                 mesh.SetIndices(
                     Enumerable.Range(0, header.vertexCount).ToArray(),
