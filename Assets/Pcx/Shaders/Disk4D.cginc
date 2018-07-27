@@ -10,6 +10,9 @@ half4 _Tint;
 half _PointSize;
 float4x4 _Transform;
 
+float4x4 _Rotation4D;
+float4 _Translation4D;
+
 // Vertex input attributes
 struct Attributes
 {
@@ -39,9 +42,6 @@ struct Point4D
 	float4 position;
 	uint color;
 };
-
-float4x4 _Rotation4D;
-float4 _Translation4D;
 
 StructuredBuffer<Point4D> _PointBuffer;
 #endif

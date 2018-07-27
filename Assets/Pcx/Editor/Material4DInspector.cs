@@ -29,6 +29,7 @@ namespace Pcx
         {
             editor.ShaderProperty(FindProperty("_Tint", props), "Tint");
             editor.ShaderProperty(FindProperty("_PointSize", props), "Point Size");
+            editor.ShaderProperty(FindProperty("_Translation4D", props), "4D Translation");
         }
     }
 }
