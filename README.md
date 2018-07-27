@@ -6,7 +6,7 @@ Pcx4D - 4D Point Cloud Importer/Renderer for Unity
 Functionalities
 ---------------
 
-- Import and Render 4D PLY files (support only ComputeBuffer rendering. See below for more details)
+- Import and Render 4D PLY files (support both Mesh and ComputeBuffer. See below for more details)
 
 - Support for PLY ASCII format
 
