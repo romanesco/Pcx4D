@@ -304,21 +304,22 @@ namespace Pcx
                     }
 
                     // Check the property type.
-                    if (col[1] == "char" || col[1] == "uchar")
+                    if (col[1] == "char" || col[1] == "uchar" || col[1] == "int8" || col[1] == "uint8")
                     {
                         if (prop == DataProperty.Invalid)
                             prop = DataProperty.Data8;
                         else if (GetPropertySize(prop) != 1)
                             throw new ArgumentException("Invalid property type ('" + line + "').");
                     }
-                    else if (col[1] == "short" || col[1] == "ushort")
+                    else if (col[1] == "short" || col[1] == "ushort" || col[1] == "int16" || col[1] == "uint16")
                     {
                         if (prop == DataProperty.Invalid)
                             prop = DataProperty.Data16;
                         else if (GetPropertySize(prop) != 2)
                             throw new ArgumentException("Invalid property type ('" + line + "').");
                     }
-                    else if (col[1] == "int" || col[1] == "uint" || col[1] == "float")
+                    else if (col[1] == "int" || col[1] == "uint" || col[1] == "float" || 
+                             col[1] == "int32" || col[1] == "uint32" || col[1] == "float32")
                     {
                         if (prop == DataProperty.Invalid)
                             prop = DataProperty.Data32;
