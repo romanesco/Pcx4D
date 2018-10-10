@@ -30,13 +30,14 @@ namespace Pcx
                 // Mesh container
                 // Create a prefab with MeshFilter/MeshRenderer.
                 var gameObject = new GameObject();
-                var mesh = ImportAsMesh(context.assetPath);
+                bool is4D;
+                var mesh = ImportAsMesh(context.assetPath, out is4D);
 
                 var meshFilter = gameObject.AddComponent<MeshFilter>();
                 meshFilter.sharedMesh = mesh;
 
                 var meshRenderer = gameObject.AddComponent<MeshRenderer>();
-                meshRenderer.sharedMaterial = GetDefaultMaterial();
+                meshRenderer.sharedMaterial = GetDefaultMaterial(is4D);
 
                 context.AddObjectToAsset("prefab", gameObject);
                 if (mesh != null) context.AddObjectToAsset("mesh", mesh);
@@ -81,11 +82,20 @@ namespace Pcx
 
         #region Internal utilities
 
-        static Material GetDefaultMaterial()
+        static Material GetDefaultMaterial(bool is4D)
         {
-            return AssetDatabase.LoadAssetAtPath<Material>(
-                "Assets/Pcx/Editor/Default Point.mat"
-            );
+            if (is4D)
+            {
+                return AssetDatabase.LoadAssetAtPath<Material>(
+                    "Assets/Pcx/Editor/Default Point 4D.mat"
+                );
+            }
+            else
+            {
+                return AssetDatabase.LoadAssetAtPath<Material>(
+                    "Assets/Pcx/Editor/Default Point.mat"
+                );
+            }
         }
 
         #endregion
@@ -172,8 +182,9 @@ namespace Pcx
 
         #region Reader implementation
 
-        Mesh ImportAsMesh(string path)
+        Mesh ImportAsMesh(string path, out bool is4D)
         {
+            is4D = false;
             try
             {
                 var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -184,6 +195,7 @@ namespace Pcx
 
                 mesh.indexFormat = header.vertexCount > 65535 ?
                     IndexFormat.UInt32 : IndexFormat.UInt16;
+                is4D = header.is4D;
                 if (header.is4D)
                 {
                     var body = header.isAscii ? ReadData4DBodyFromAscii(header, new StreamReader(stream)) : ReadData4DBody(header, new BinaryReader(stream));
