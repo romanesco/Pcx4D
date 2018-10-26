@@ -433,7 +433,7 @@ namespace Pcx
             for (var i = 0; i < header.vertexCount; i++)
             {
                 var line = reader.ReadLine();
-                var col = line.Split();
+                var col = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
                 int j = 0;
                 foreach (var prop in header.properties)
                 {
@@ -473,7 +473,7 @@ namespace Pcx
             for (var i = 0; i < header.vertexCount; i++)
             {
                 var line = reader.ReadLine();
-                var col = line.Split();
+                var col = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
                 int j = 0;
                 foreach (var prop in header.properties)
                 {
