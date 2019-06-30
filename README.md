@@ -3,6 +3,9 @@ Pcx4D - 4D Point Cloud Importer/Renderer for Unity
 
 **Pcx4D** is a fork of a Poinc Cloud library called Pcx by Keijiro Takahashi (https://github.com/keijiro/Pcx) for importing 4-dimensional point cloud data.
 
+From version 0.3, **we changed the root directory**. Now the root directory is Assets/Pcx (or Assets/Pcx4D), so it does not include the whole Unity project any more.
+Because of that, you can simply use git submodule to include Pcx4D to your Unity project.
+
 Functionalities
 ---------------
 
