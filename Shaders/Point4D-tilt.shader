@@ -27,7 +27,7 @@ Shader "Point Cloud/Point4D-tilt"
             #pragma multi_compile _ _COMPUTE_BUFFER
 
             #include "UnityCG.cginc"
-            #include "../Pcx/Shaders/Common.cginc"
+            #include "Common.cginc"
 
             struct Attributes
             {
