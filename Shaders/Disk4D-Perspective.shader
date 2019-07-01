@@ -10,7 +10,7 @@ Shader "Point Cloud/Disk4D-Perspective"
 		_PointSize("Point Size", Float) = 0.05
 		[Toggle] _Distance("Apply Distance", Float) = 1
 		_Translation4D("4D Translation", Vector) = (0, 0, 0, 0)
-		_Camera4D("4D Caamera", Vector) = (0, 0, 0, 5)
+		_Camera4D("4D Camera", Vector) = (0, 0, 0, 5)
 		_FoV("FoV", Float) = 90
 	}
 		SubShader
