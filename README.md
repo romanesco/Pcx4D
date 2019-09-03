@@ -14,7 +14,7 @@ Functionalities
 - Support for PLY ASCII format
 
 - 3D PLY files are also supported 
-(note that it Pcx4D conflicts with the original Pcx)
+(note that Pcx4D is upper-compatible with the original Pcx, so Pcx4D conflicts with the original Pcx)
 
 Below is the original README.md for Pcx:
 ----------------------------------------------------------------------------
