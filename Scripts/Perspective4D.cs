@@ -14,6 +14,9 @@ public class Perspective4D : MonoBehaviour {
     [SerializeField] Vector4 _swingVector = new Vector4(1f, 0f, 0f, 0f);
     [SerializeField] float _period = 2f;
 
+    [SerializeField] Vector4 _translation4D = new Vector4(0f, 0f, 0f, 0f);
+    [SerializeField] bool _translateCameraPosition = true;  // translate Camera position by _translation4D (in order to change the target position)
+
     public Matrix4x4 LookAt4D(Vector4 eye, Vector4 center, Vector4 _up1, Vector4 _up2)
     {
         float4 v1 = -(center - eye), v2, v3;
@@ -42,10 +45,19 @@ public class Perspective4D : MonoBehaviour {
 
     
     void SetVariables(Vector4 c) {
+        if (_translateCameraPosition)
+        {
+            c += _translation4D;
+        }
+
         Matrix4x4 _view4D = LookAt4D(c, Vector4.zero, new Vector4(0f, 1f, 0f, 0f), new Vector4(0f, 0f, 1f, 0f));
-        GetComponent<Renderer>().sharedMaterial.SetVector("_Camera4D", c);
-        GetComponent<Renderer>().sharedMaterial.SetFloat("_FoV", _fieldOfView);
+        
         GetComponent<Renderer>().sharedMaterial.SetMatrix("_View4D", _view4D);
+        GetComponent<Renderer>().sharedMaterial.SetVector("_Camera4D", c);
+
+        GetComponent<Renderer>().sharedMaterial.SetFloat("_FoV", _fieldOfView);
+        GetComponent<Renderer>().sharedMaterial.SetVector("_Translation4D", _translation4D);
+    
     }
 
     private void OnValidate()
