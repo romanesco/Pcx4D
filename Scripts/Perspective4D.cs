@@ -12,10 +12,23 @@ public class Perspective4D : MonoBehaviour {
 
     [SerializeField] bool _swing = true;
     [SerializeField] Vector4 _swingVector = new Vector4(1f, 0f, 0f, 0f);
+    [SerializeField] float _swingScale = 1;
     [SerializeField] float _period = 2f;
 
     [SerializeField] Vector4 _translation4D = new Vector4(0f, 0f, 0f, 0f);
     [SerializeField] bool _translateCameraPosition = true;  // translate Camera position by _translation4D (in order to change the target position)
+
+    public bool Swing
+    {
+        get { return _swing; }
+        set { this._swing = value; }
+    }
+
+    public float SwingScale
+    {
+        get { return _swingScale; }
+        set { this._swingScale = value; }
+    }
 
     public Matrix4x4 LookAt4D(Vector4 eye, Vector4 center, Vector4 _up1, Vector4 _up2)
     {
@@ -73,7 +86,7 @@ public class Perspective4D : MonoBehaviour {
         Vector4 c = _camera4D;
         if (_swing)
         {
-            c += Mathf.Sin(Time.time * 2f * Mathf.PI / _period) * _swingVector;
+            c += _swingScale * Mathf.Sin(Time.time * 2f * Mathf.PI / _period) * _swingVector;
         }
         SetVariables(c);
 
