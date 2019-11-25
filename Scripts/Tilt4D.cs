@@ -5,12 +5,12 @@ using UnityEngine;
 public class Tilt4D : MonoBehaviour
 {
     [SerializeField] float _tiltAngle = 1f; // in degree
-    [SerializeField] bool _OppositeTilt = true;
+    [SerializeField] bool _OppositeTilt = false;
 
     public float tiltAngle
     {
         get { return _tiltAngle; }
-        set { _tiltAngle = value; }
+        set { _tiltAngle = value; SetMatrices(); }
     }
 
     void OnEnable()
