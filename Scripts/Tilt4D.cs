@@ -12,6 +12,11 @@ public class Tilt4D : MonoBehaviour
         get { return _tiltAngle; }
         set { _tiltAngle = value; SetMatrices(); }
     }
+    public  bool  oppositeTilt
+    {
+        get { return _OppositeTilt; }
+        set { _OppositeTilt = value; SetMatrices(); }
+    }
 
     void OnEnable()
     {
