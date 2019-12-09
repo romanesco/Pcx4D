@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+using Pcx4D;
+
 namespace Pcx
 {
     [ScriptedImporter(1, "ply")]

@@ -3,6 +3,7 @@
 // https://github.com/keijiro/Pcx
 
 using UnityEngine;
+using Pcx4D;
 
 namespace Pcx
 {

@@ -5,7 +5,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace Pcx
+namespace Pcx4D
 {
     /// A container class optimized for compute buffer.
     public sealed class PointCloudData4D : ScriptableObject
