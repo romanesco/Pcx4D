@@ -32,6 +32,7 @@ struct Attributes
 struct Varyings
 {
     float4 position : SV_POSITION;
+    float2 uv2 : TEXCOORD1;
 #if !PCX_SHADOW_CASTER
     half3 color : COLOR;
     UNITY_FOG_COORDS(0)
@@ -85,6 +86,7 @@ Varyings Vertex(Attributes input)
     // Set vertex output.
     Varyings o;
     o.position = UnityObjectToClipPos(pos);
+    o.uv2 = float2(viewPos4d.w, 0);
 #if !PCX_SHADOW_CASTER
     o.color = col;
     UNITY_TRANSFER_FOG(o, o.position);
@@ -98,6 +100,7 @@ void Geometry(point Varyings input[1], inout TriangleStream<Varyings> outStream)
 {
     float4 origin = input[0].position;
     float2 extent = abs(UNITY_MATRIX_P._11_22 * _PointSize);
+    extent /= abs(input[0].uv2.x);
 
     // Copy the basic information.
     Varyings o = input[0];
