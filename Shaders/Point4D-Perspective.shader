@@ -79,7 +79,7 @@ Shader "Point Cloud/Point4D-Perspective"
                 half3 col = PcxDecodeColor(pt.color);
             #else
                 float4 pos4d = float4(input.position.xyz, input.uv2.x);
-                pos4d = mul(_Rotation4D, pos4d) + _Translation4D;
+                pos4d = mul(_Rotation4D, pos4d + _Translation4D);
                 //pos4d = pos4d + _Translation4D;
                 // view position
                 float4 viewPos4d = mul(_View4D, pos4d - _Camera4D);
