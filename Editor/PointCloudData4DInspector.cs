@@ -5,7 +5,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace Pcx
+namespace Pcx4D
 {
     [CustomEditor(typeof(PointCloudData4D))]
     public sealed class PointCloudData4DInspector : Editor
