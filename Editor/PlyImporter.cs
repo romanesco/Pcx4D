@@ -12,8 +12,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using Pcx4D;
-
 namespace Pcx
 {
     [ScriptedImporter(1, "ply")]
@@ -428,6 +426,8 @@ namespace Pcx
         DataBody ReadDataBodyFromAscii(DataHeader header, StreamReader reader)
         {
             var data = new DataBody(header.vertexCount);
+            reader.BaseStream.Position = 0;
+            while (reader.ReadLine() != "end_header") { };
 
             float x = 0, y = 0, z = 0;
             Byte r = 255, g = 255, b = 255, a = 255;
@@ -468,6 +468,8 @@ namespace Pcx
         Data4DBody ReadData4DBodyFromAscii(DataHeader header, StreamReader reader)
         {
             var data = new Data4DBody(header.vertexCount);
+            reader.BaseStream.Position = 0;
+            while (reader.ReadLine() != "end_header") { };
 
             float x = 0, y = 0, z = 0, w = 0;
             Byte r = 255, g = 255, b = 255, a = 255;
@@ -475,6 +477,7 @@ namespace Pcx
             for (var i = 0; i < header.vertexCount; i++)
             {
                 var line = reader.ReadLine();
+                //Debug.Log(line);
                 var col = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
                 int j = 0;
                 foreach (var prop in header.properties)
