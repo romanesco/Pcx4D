@@ -5,6 +5,7 @@ using UnityEngine;
 public class Rotate4D : MonoBehaviour {
 
     [SerializeField] float period = 5;
+    [SerializeField] bool stopOnDisable = true;
 
     float offset = 0;
     float disableTime = 0;
@@ -13,7 +14,10 @@ public class Rotate4D : MonoBehaviour {
     {
         var tempMaterial = GetComponent<Renderer>().material;
         GetComponent<Renderer>().sharedMaterial = tempMaterial;
-        offset += Time.time - disableTime;
+        if (stopOnDisable)
+        {
+            offset += Time.time - disableTime;
+        }
     }
 
     // Update is called once per frame

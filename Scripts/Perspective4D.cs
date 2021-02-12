@@ -7,7 +7,7 @@ using Unity.Mathematics;
 
 public class Perspective4D : MonoBehaviour {
 
-    [SerializeField] Vector4 _camera4D = new Vector4(0f, 0f, 0f, 3f);
+    public Vector4 _camera4D = new Vector4(0f, 0f, 0f, 3f);
     [SerializeField] float _fieldOfView = 90;
 
     [SerializeField] bool _swing = true;
@@ -15,7 +15,7 @@ public class Perspective4D : MonoBehaviour {
     [SerializeField] float _swingScale = 1;
     [SerializeField] float _period = 2f;
 
-    [SerializeField] Vector4 _translation4D = new Vector4(0f, 0f, 0f, 0f);
+    public Vector4 _translation4D = new Vector4(0f, 0f, 0f, 0f);
     [SerializeField] bool _translateCameraPosition = true;  // translate Camera position by _translation4D (in order to change the target position)
 
     public bool Swing
