@@ -10,7 +10,7 @@ namespace Pcx4D
     public class Perspective4D : MonoBehaviour
     {
 
-        [SerializeField] Vector4 _camera4D = new Vector4(0f, 0f, 0f, 3f);
+        public Vector4 _camera4D = new Vector4(0f, 0f, 0f, 3f);
         [SerializeField] float _fieldOfView = 90;
 
         [SerializeField] bool _swing = true;
