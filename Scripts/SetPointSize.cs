@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Pcx4D
+namespace Pcx
 {
     public class SetPointSize : MonoBehaviour
     {

@@ -11,8 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Pcx
 
-namespace Pcx
+namespace Pcx4D
 {
     [ScriptedImporter(1, "ply")]
     class PlyImporter : ScriptedImporter

@@ -5,7 +5,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace Pcx
+namespace Pcx4D
 {
     [CanEditMultipleObjects]
     [CustomEditor(typeof(PointCloud4DRenderer))]

@@ -3,9 +3,8 @@
 // https://github.com/keijiro/Pcx
 
 using UnityEngine;
-using Pcx4D;
 
-namespace Pcx
+namespace Pcx4D
 {
     /// A renderer class that renders a point cloud contained by PointCloudData4D.
     [ExecuteInEditMode]

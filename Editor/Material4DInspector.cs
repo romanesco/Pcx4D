@@ -5,7 +5,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace Pcx
+namespace Pcx4D
 {
     class Point4DMaterialInspector : ShaderGUI
     {

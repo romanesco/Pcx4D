@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.Experimental.AssetImporters;
 
-namespace Pcx
+namespace Pcx4D
 {
     // Note: Not sure why but EnumPopup doesn't work in ScriptedImporterEditor,
     // so it has been replaced with a normal Popup control.
