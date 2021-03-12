@@ -53,10 +53,17 @@ namespace Pcx4D
             SetMesh();
         }
 
-        // Update is called once per frame
         void OnValidate()
         {
-            SetMesh();
+            if (Application.isPlaying)
+            {
+                SetMesh();
+            }
+            else
+            {
+                // reduce the size of the scene
+                gameObject.GetComponent<MeshFilter>().mesh = null;
+            }
         }
     }
 }

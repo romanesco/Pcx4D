@@ -103,8 +103,16 @@ public class KleinBottle : MonoBehaviour
         
     }
 
-    private void OnValidate()
+    void OnValidate()
     {
-        SetMesh();
+        if (Application.isPlaying)
+        {
+            SetMesh();
+        }
+        else
+        {
+            // reduce the size of the scene
+            gameObject.GetComponent<MeshFilter>().mesh = null;
+        }
     }
 }

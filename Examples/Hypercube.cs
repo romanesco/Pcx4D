@@ -145,7 +145,6 @@ namespace Pcx4D
             Debug.Log("Hypercube: initialize mesh.");
         }
 
-        // Update is called once per frame
         void OnValidate()
         {
             if (Application.isPlaying)
