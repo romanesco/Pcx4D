@@ -15,6 +15,7 @@ namespace Pcx4D
             editor.ShaderProperty(FindProperty("_PointSize", props), "Point Size");
             editor.ShaderProperty(FindProperty("_Distance", props), "Apply Distance");
             editor.ShaderProperty(FindProperty("_Translation4D", props), "4D Translation");
+            editor.ShaderProperty(FindProperty("_Chiral", props), "Chirality (Invert w Coordinate)");
 
             EditorGUILayout.HelpBox(
                 "Only some platform support these point size properties.",

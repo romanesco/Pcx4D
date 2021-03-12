@@ -10,6 +10,7 @@ Shader "Point Cloud/Point4D"
         _PointSize("Point Size", Float) = 0.05
         [Toggle] _Distance("Apply Distance", Float) = 1
         _Translation4D("4D Translation", Vector) = (0, 0, 0, 0)
+        [Toggle] _Chiral("Chirality (invert w coordinate)", Float) = 0
     }
     SubShader
     {
@@ -53,6 +54,7 @@ Shader "Point Cloud/Point4D"
             half4 _Tint;
             float4x4 _Transform;
             half _PointSize;
+            float _Chiral;
 
             float4x4 _Rotation4D;
             float4 _Translation4D;
@@ -73,7 +75,7 @@ Shader "Point Cloud/Point4D"
                 float4 pos = mul(_Transform, float4(pos4d.xyz, 1));
                 half3 col = PcxDecodeColor(pt.color);
             #else
-                float4 pos4d = float4(input.position.xyz, input.uv2.x);
+                float4 pos4d = float4(input.position.xyz, _Chiral ? -input.uv2.x : input.uv2.x);
                 pos4d = mul(_Rotation4D, pos4d) + _Translation4D;
                 //pos4d = pos4d + _Translation4D;
                 float4 pos = float4(pos4d.xyz, 1);

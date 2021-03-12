@@ -9,6 +9,7 @@ Shader "Point Cloud/Disk4D"
         _Tint("Tint", Color) = (0.5, 0.5, 0.5, 1)
         _PointSize("Point Size", Float) = 0.05
         _Translation4D("4D Translation", Vector) = (0, 0, 0, 0)
+        [Toggle] _Chiral("Chirality (invert w coordinate)", Float) = 0
     }
     SubShader
     {
