@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Pcx
+using Pcx;
 
 namespace Pcx4D
 {
