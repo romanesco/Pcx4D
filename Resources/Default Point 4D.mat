@@ -20,6 +20,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Floats:
+    - _Chiral: 0
     - _Distance: 1
     - _PointSize: 0.01
     m_Colors:

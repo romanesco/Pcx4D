@@ -59,18 +59,13 @@ Varyings Vertex(Attributes input)
 	Point4D pt = _PointBuffer[input.vertexID];
 	float4 pos4d = mul(_Rotation4D, pt.position) + _Translation4D;
 	//float4 pos4d = pt.position;
-	float4 pos = mul(_Transform, float4(pos4d.xyz, 1));
+	//float4 pos = mul(_Transform, float4(pos4d.xyz, 1));
 	half3 col = PcxDecodeColor(pt.color);
 #else
     float4 pos4d = float4(input.position.xyz, _Chiral ? -input.uv2.x : input.uv2.x);
     pos4d = mul(_Rotation4D, pos4d) + _Translation4D;
     //pos4d = pos4d + _Translation4D;
 	// view position
-	float4 viewPos4d = mul(_View4D, pos4d - _Camera4D);
-	/// perspective projection
-	static const float PI = 3.14159265f;
-	static const float DEG2RAD = PI / 180.f;
-	float4 pos = float4(viewPos4d.xyz / (viewPos4d.w*tan(_FoV*DEG2RAD / 2)), 1); 
 	half3 col = input.color;
 #endif
 
@@ -83,6 +78,12 @@ Varyings Vertex(Attributes input)
         col = GammaToLinearSpace(col);
     #endif
 #endif
+
+	float4 viewPos4d = mul(_View4D, pos4d - _Camera4D);
+	/// perspective projection
+	static const float PI = 3.14159265f;
+	static const float DEG2RAD = PI / 180.f;
+	float4 pos = float4(viewPos4d.xyz / (viewPos4d.w*tan(_FoV*DEG2RAD / 2)), 1);
 
     // Set vertex output.
     Varyings o;
