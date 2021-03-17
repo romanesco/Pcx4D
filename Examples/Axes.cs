@@ -45,12 +45,17 @@ namespace Pcx4D
 
         void SetMesh()
         {
-            Mesh mesh = CreateMesh(numPoints);
-            gameObject.GetComponent<MeshFilter>().mesh = mesh;
+            var meshFilter = GetComponent<MeshFilter>();
+            if (meshFilter)
+            {
+                var oldmesh = meshFilter.sharedMesh;
+                Mesh mesh = CreateMesh(numPoints);
+                GetComponent<MeshFilter>().mesh = mesh;
+                Destroy(oldmesh);
+            }
         }
 
-        // Start is called before the first frame update
-        void Start()
+        void Awake()
         {
             SetMesh();
         }
@@ -58,7 +63,18 @@ namespace Pcx4D
         // Update is called once per frame
         void OnValidate()
         {
-            SetMesh();
+            if (Application.isPlaying)
+            {
+                SetMesh();
+            }
+            else
+            {
+                // reduce the size of the scene
+                if (GetComponent<MeshFilter>())
+                {
+                    GetComponent<MeshFilter>().mesh = null;
+                }
+            }
         }
     }
 }

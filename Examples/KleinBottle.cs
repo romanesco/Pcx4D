@@ -88,11 +88,17 @@ public class KleinBottle : MonoBehaviour
 
     void SetMesh()
     {
-        var mesh = CreateMesh();
-        gameObject.GetComponent<MeshFilter>().mesh = mesh;
+        var meshFilter = GetComponent<MeshFilter>();
+        if (meshFilter)
+        {
+            var oldmesh = meshFilter.sharedMesh;
+            Mesh mesh = CreateMesh();
+            GetComponent<MeshFilter>().mesh = mesh;
+            Destroy(oldmesh);
+        }
     }
-    // Start is called before the first frame update
-    void Start()
+    
+    void Awake()
     {
         SetMesh();
     }
@@ -112,7 +118,10 @@ public class KleinBottle : MonoBehaviour
         else
         {
             // reduce the size of the scene
-            gameObject.GetComponent<MeshFilter>().mesh = null;
+            if (GetComponent<MeshFilter>())
+            {
+                GetComponent<MeshFilter>().mesh = null;
+            }
         }
     }
 }

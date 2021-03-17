@@ -6,6 +6,7 @@ using UnityEngine;
 public class SwissRoll4D : MonoBehaviour
 {
     [SerializeField] int points = 2000;
+    [SerializeField] bool _initialized = false;
 
     Vector2 SwissRoll(float x)
     {
@@ -43,15 +44,24 @@ public class SwissRoll4D : MonoBehaviour
 
     void SetMesh()
     {
-        var mesh = CreateMesh(points);
-        gameObject.GetComponent<MeshFilter>().mesh = mesh;
-
+        var meshFilter = GetComponent<MeshFilter>();
+        if (meshFilter)
+        {
+            var oldmesh = meshFilter.sharedMesh;
+            Mesh mesh = CreateMesh(points);
+            GetComponent<MeshFilter>().mesh = mesh;
+            Destroy(oldmesh);
+        }
     }
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        SetMesh();
+        // avoid recreating mesh when Instantiate()
+        if (!_initialized)
+        {
+            SetMesh();
+        }
+        _initialized = true;
     }
 
     // Update is called once per frame
@@ -69,7 +79,10 @@ public class SwissRoll4D : MonoBehaviour
         else
         {
             // reduce the size of the scene
-            gameObject.GetComponent<MeshFilter>().mesh = null;
+            if (GetComponent<MeshFilter>())
+            {
+                GetComponent<MeshFilter>().mesh = null;
+            }
         }
     }
 }

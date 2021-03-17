@@ -93,8 +93,14 @@ namespace Pcx4D
 
         void SetMesh()
         {
-            Mesh mesh = CreateMesh(numPoints);
-            gameObject.GetComponent<MeshFilter>().mesh = mesh;
+            var meshFilter = GetComponent<MeshFilter>();
+            if (meshFilter)
+            {
+                var oldmesh = meshFilter.sharedMesh;
+                Mesh mesh = CreateMesh(numPoints);
+                GetComponent<MeshFilter>().mesh = mesh;
+                Destroy(oldmesh);
+            }
         }
 
         void Awake()
@@ -111,7 +117,10 @@ namespace Pcx4D
             } else
             {
                 // reduce the size of the scene
-                gameObject.GetComponent<MeshFilter>().mesh = null;
+                if (GetComponent<MeshFilter>())
+                {
+                    GetComponent<MeshFilter>().mesh = null;
+                }
             }
         }
 

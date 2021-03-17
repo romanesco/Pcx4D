@@ -16,11 +16,11 @@ namespace Pcx4D
         [SerializeField] Color color2 = new Color(0, 0.75f, 0);
         [SerializeField] Color color3 = new Color(0, 0, 0.75f);
         [SerializeField] Color color4 = new Color(0.25f, 0.25f, 0.25f);
-        
-
 
         List<List<int>> combinations = new List<List<int>>();
-        
+
+        [SerializeField] bool _initialized = false;
+
         void InitCombination(int n=4)
         {            
             for (int k=0; k<=n; k++)
@@ -134,15 +134,28 @@ namespace Pcx4D
 
         void SetMesh()
         {
-            Mesh mesh = CreateMesh2(numPoints);
-            gameObject.GetComponent<MeshFilter>().mesh = mesh;
+            var meshFilter = GetComponent<MeshFilter>();
+            if (meshFilter)
+            {
+                var oldmesh = meshFilter.sharedMesh;
+                Mesh mesh = CreateMesh2(numPoints);
+                GetComponent<MeshFilter>().mesh = mesh;
+                Destroy(oldmesh);
+            }
         }
 
         void Awake()
         {
             InitCombination();
-            SetMesh();
-            Debug.Log("Hypercube: initialize mesh.");
+
+            // avoid recreating mesh when Instantiate()
+            if (!_initialized)
+            {
+                SetMesh();
+                Debug.Log("Hypercube: initialize mesh.");
+            }
+            _initialized = true;
+
         }
 
         void OnValidate()
@@ -153,7 +166,10 @@ namespace Pcx4D
             } else
             {
                 // reduce the size of the scene
-                gameObject.GetComponent<MeshFilter>().mesh = null;
+                if (GetComponent<MeshFilter>())
+                {
+                    GetComponent<MeshFilter>().mesh = null;
+                }
             }
         }
 
