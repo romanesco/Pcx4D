@@ -41,5 +41,5 @@ Shader "Point Cloud/Disk4D-tilt"
 		ENDCG
 	}
 	}
-		CustomEditor "Pcx.Disk4DMaterialInspector"
+		CustomEditor "Pcx4D.Disk4DMaterialInspector"
 }

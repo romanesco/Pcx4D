@@ -122,5 +122,5 @@ Shader "Point Cloud/Point4D-tilt"
             ENDCG
         }
     }
-    CustomEditor "Pcx.Point4DMaterialInspector"
+    CustomEditor "Pcx4D.Point4DMaterialInspector"
 }

@@ -111,5 +111,5 @@ Shader "Point Cloud/Point4D"
             ENDCG
         }
     }
-    CustomEditor "Pcx.Point4DMaterialInspector"
+    CustomEditor "Pcx4D.Point4DMaterialInspector"
 }
