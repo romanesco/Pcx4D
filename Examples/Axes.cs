@@ -18,6 +18,8 @@ namespace Pcx4D
 
         [SerializeField] Vector4 length = new Vector4(1, 1, 1, 1);
 
+        [SerializeField] bool _initialized = false;
+
         Mesh CreateMesh(int n)
         {
             List<Vector3> vs = new List<Vector3>();
@@ -63,11 +65,6 @@ namespace Pcx4D
             }
         }
 
-        private void Start()
-        {
-            SetColors();
-        }
-
         void SetColors()
         {
             colors[0] = color1;
@@ -78,7 +75,15 @@ namespace Pcx4D
 
         void Awake()
         {
-            SetMesh();
+            SetColors();
+            
+            // avoid recreating mesh when Instantiate()
+            if (!_initialized)
+            {
+                SetMesh();
+                Debug.Log("Axes: initialize mesh.");
+            }
+            _initialized = true;
         }
 
         // Update is called once per frame
