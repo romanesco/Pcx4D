@@ -20,6 +20,8 @@ namespace Pcx4D
 
         [SerializeField] bool _initialized = false;
 
+        public Matrix4x4 matrix = Matrix4x4.identity;
+
         Mesh CreateMesh(int n)
         {
             List<Vector3> vs = new List<Vector3>();
@@ -34,6 +36,8 @@ namespace Pcx4D
                 {
                     float t = 1f / (n - 1) * l;
                     Vector4 q = t * p;
+
+                    q = matrix.transpose * q;
 
                     vs.Add(new Vector3(q.x, q.y, q.z));
                     uvs.Add(new Vector2(q.w, 0f));
