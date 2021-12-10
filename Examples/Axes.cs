@@ -7,16 +7,16 @@ namespace Pcx4D
 {
     public class Axes : MonoBehaviour
     {
-        [SerializeField] int numPoints = 100;
+        public int numPoints = 100;
 
-        [SerializeField] Color color1 = Color.HSVToRGB(0, 1, 1);
-        [SerializeField] Color color2 = Color.HSVToRGB(0.25f, 1, 1);
-        [SerializeField] Color color3 = Color.HSVToRGB(0.5f, 1, 1);
-        [SerializeField] Color color4 = Color.HSVToRGB(0.75f, 1, 1);
+        public Color color1 = Color.HSVToRGB(0, 1, 1);
+        public Color color2 = Color.HSVToRGB(0.25f, 1, 1);
+        public Color color3 = Color.HSVToRGB(0.5f, 1, 1);
+        public Color color4 = Color.HSVToRGB(0.75f, 1, 1);
 
         Color[] colors = new Color[4];
 
-        [SerializeField] Vector4 length = new Vector4(1, 1, 1, 1);
+        public Vector4 length = new Vector4(1, 1, 1, 1);
 
         [SerializeField] bool _initialized = false;
 
