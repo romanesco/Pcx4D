@@ -22,6 +22,12 @@ namespace Pcx4D
 
         public Matrix4x4 matrix = Matrix4x4.identity;
 
+        public void Recreate()
+        {
+            SetColors();
+            SetMesh();
+        }
+
         Mesh CreateMesh(int n)
         {
             List<Vector3> vs = new List<Vector3>();
