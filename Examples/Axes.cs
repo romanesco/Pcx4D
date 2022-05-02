@@ -111,6 +111,7 @@ namespace Pcx4D
                 if (GetComponent<MeshFilter>())
                 {
                     GetComponent<MeshFilter>().mesh = null;
+                    _initialized = false;
                 }
             }
         }
