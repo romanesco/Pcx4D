@@ -7,7 +7,7 @@
 
 // Uniforms
 half4 _Tint;
-half _PointSize;
+float _PointSize;
 float4x4 _Transform;
 float _Chiral;
 

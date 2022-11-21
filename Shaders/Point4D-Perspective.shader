@@ -43,7 +43,7 @@ Shader "Point Cloud/Point4D-Perspective"
             {
                 float4 position : SV_Position;
                 half3 color : COLOR;
-                half psize : PSIZE;
+                float psize : PSIZE;
                 UNITY_FOG_COORDS(0)
             };
 
@@ -55,7 +55,7 @@ Shader "Point Cloud/Point4D-Perspective"
 
             half4 _Tint;
             float4x4 _Transform;
-            half _PointSize;
+            float _PointSize;
             float _Chiral;
 
             float4x4 _Rotation4D;

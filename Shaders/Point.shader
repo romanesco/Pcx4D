@@ -37,13 +37,13 @@ Shader "Point Cloud/Point"
             {
                 float4 position : SV_Position;
                 half3 color : COLOR;
-                half psize : PSIZE;
+                float psize : PSIZE;
                 UNITY_FOG_COORDS(0)
             };
 
             half4 _Tint;
             float4x4 _Transform;
-            half _PointSize;
+            float _PointSize;
 
         #if _COMPUTE_BUFFER
             StructuredBuffer<float4> _PointBuffer;
