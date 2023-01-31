@@ -54,6 +54,8 @@ MonoBehaviour:
   color2: {r: 0, g: 0.75, b: 0, a: 1}
   color3: {r: 0, g: 0, b: 0.75, a: 1}
   color4: {r: 0.25, g: 0.25, b: 0.25, a: 1}
+  useSingleColor: 0
+  singleColor: {r: 0.75, g: 0.75, b: 0.75, a: 1}
   _initialized: 0
 --- !u!33 &7323366978706159597
 MeshFilter:

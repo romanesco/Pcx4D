@@ -17,6 +17,9 @@ namespace Pcx4D
         [SerializeField] Color color3 = new Color(0, 0, 0.75f);
         [SerializeField] Color color4 = new Color(0.25f, 0.25f, 0.25f);
 
+        public bool useSingleColor = false;
+        public Color singleColor = new Color(0.75f, 0.75f, 0.75f);
+
         List<List<int>> combinations = new List<List<int>>();
 
         [SerializeField] bool _initialized = false;
@@ -71,7 +74,14 @@ namespace Pcx4D
                         }
                         vs.Add(new Vector3(v.x, v.y, v.z));
                         uvs.Add(new Vector2((chiral ? -1 : 1) * v.w, 0));
-                        cols.Add((v.x + 1) / 2 * color1 + (v.y + 1) / 2 * color2 + (v.z + 1) / 2 * color3 + (v.w + 1) / 2 * color4);
+                        if (useSingleColor)
+                        {
+                            cols.Add(singleColor);
+                        }
+                        else
+                        {
+                            cols.Add((v.x + 1) / 2 * color1 + (v.y + 1) / 2 * color2 + (v.z + 1) / 2 * color3 + (v.w + 1) / 2 * color4);
+                        }
                     }
                 }
             }

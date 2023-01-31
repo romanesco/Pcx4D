@@ -7,7 +7,9 @@ namespace Pcx4D
 {
     public class HypercubeVertices : MonoBehaviour
     {
-        
+        public bool useSingleColor = false;
+        public Color singleColor = Color.white;
+
         Mesh CreateMesh()
         {
             List<Vector3> vs = new List<Vector3>();
@@ -16,7 +18,6 @@ namespace Pcx4D
 
             for (int i=0; i<16; i++)
             {
-                Color col = Color.HSVToRGB(1f / 16 * i, 1, 1);
                 Vector4 p = new Vector4();
                 for (int k=0; k<4; k++) {
                     p[k] = (i >> k) & 1;
@@ -26,7 +27,15 @@ namespace Pcx4D
 
                 vs.Add(new Vector3(p.x, p.y, p.z));
                 uvs.Add(new Vector2(p.w, 0f));
-                cols.Add(col);
+                if (useSingleColor)
+                {
+                    cols.Add(singleColor);
+                }
+                else
+                {
+                    Color col = Color.HSVToRGB(1f / 16 * i, 1, 1);
+                    cols.Add(col);
+                }
             }
             
             Mesh mesh = new Mesh();
