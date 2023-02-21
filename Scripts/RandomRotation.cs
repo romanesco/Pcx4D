@@ -8,25 +8,10 @@ namespace Pcx4D
     {
         public static Matrix4x4 randomDistributionOnSO3()
         {
-            Quaternion q1 = Random.rotation;
-            Matrix4x4 A1 = new Matrix4x4();
-            A1[0, 0] = q1.x;
-            A1[0, 1] = -q1.y;
-            A1[0, 2] = -q1.z;
-            A1[0, 3] = -q1.w;
-            A1[1, 0] = q1.y;
-            A1[1, 1] = q1.x;
-            A1[1, 2] = -q1.w;
-            A1[1, 3] = q1.z;
-            A1[2, 0] = q1.z;
-            A1[2, 1] = q1.w;
-            A1[2, 2] = q1.x;
-            A1[2, 3] = -q1.y;
-            A1[3, 0] = q1.w;
-            A1[3, 1] = -q1.z;
-            A1[3, 2] = q1.y;
-            A1[3, 3] = q1.x;
-            return A1;
+            Quaternion q = Random.rotation;
+            Matrix4x4 A = Matrix4x4.Rotate(q);
+            
+            return A;
         }
 
         public static Matrix4x4 randomDistributionOnXY_ZW()
