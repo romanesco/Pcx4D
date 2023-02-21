@@ -16,7 +16,7 @@ namespace Pcx4D
 
         public static Matrix4x4 randomDistributionOnXY_ZW()
         {
-            float t1 = Random.value, t2 = Random.value;
+            float t1 = Random.value*2*Mathf.PI, t2 = Random.value*2*Mathf.PI;
             float c1 = Mathf.Cos(t1), s1 = Mathf.Sin(t1), c2 = Mathf.Cos(t2), s2 = Mathf.Sin(t2);
             Matrix4x4 A = Matrix4x4.zero;
             A[0, 0] = c1;
