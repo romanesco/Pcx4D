@@ -10,10 +10,12 @@ Shader "Point Cloud/Disk4D"
         _PointSize("Point Size", Float) = 0.05
         _Translation4D("4D Translation", Vector) = (0, 0, 0, 0)
         [Toggle] _Chiral("Chirality (invert w coordinate)", Float) = 0
+        [Enum(UnityEngine.Rendering.BlendMode)] _DstFactor("Dst Factor", Float) = 10    // OneMinusSrcAlpha
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags { "RenderType"="Transparent" "Queue"="Transparent"}
+        Blend SrcAlpha [_DstFactor]
         Cull Off
         Pass
         {
