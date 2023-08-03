@@ -44,5 +44,4 @@ Shader "Point Cloud/Disk4D-Perspective"
 			ENDCG
 		}
 	}
-		CustomEditor "Pcx4D.Disk4DMaterialInspector"
 }

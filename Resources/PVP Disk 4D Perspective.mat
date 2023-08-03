@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Default Disk 4D Tilt
-  m_Shader: {fileID: 4800000, guid: ba809f04d11520641be6c721b4bec9cf, type: 3}
+  m_Name: PVP Disk 4D Perspective
+  m_Shader: {fileID: 4800000, guid: 9de9ccb27c351bb4aae95b90eec1474c, type: 3}
   m_ShaderKeywords: _DISTANCE_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -22,9 +22,9 @@ Material:
     m_Floats:
     - _Chiral: 0
     - _Distance: 1
-    - _FoV: 90
+    - _FoV: 60
     - _PointSize: 0.005
     m_Colors:
-    - _Camera4D: {r: 0, g: 0, b: 0, a: 5}
+    - _Camera4D: {r: 0, g: 0, b: 0, a: -3}
     - _Tint: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _Translation4D: {r: 0, g: 0, b: 0, a: 0}

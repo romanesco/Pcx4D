@@ -122,5 +122,4 @@ Shader "Point Cloud/Point4D-Perspective"
             ENDCG
         }
     }
-    CustomEditor "Pcx4D.Point4DMaterialInspector"
 }

@@ -1,4 +1,4 @@
-﻿// 4D extension of Pcx by Hiroyuki Inou:
+// 4D extension of Pcx by Hiroyuki Inou:
 // Pcx - Point cloud importer & renderer for Unity
 // https://github.com/keijiro/Pcx
 
@@ -11,7 +11,7 @@ float _PointSize;
 float4x4 _Transform;
 float _Chiral;
 
-float4x4 _Rotation4D, _Tilt4D_LeftEye, _Tilt4D_RightEye;
+float4x4 _Rotation4D, _Tilt4D_LeftEye, _Tilt4D_RightEye, _VMain;
 float4 _Translation4D;
 
 // Vertex input attributes
@@ -78,7 +78,8 @@ Varyings Vertex(Attributes input)
     // Set vertex output.
     Varyings o;
     //o.position = UnityObjectToClipPos(pos);
-	float4 pos2 = float4(UnityObjectToViewPos(pos).xyz,pos4d.w);
+	// float4 pos2 = float4(UnityObjectToViewPos(pos).xyz,pos4d.w);
+	float4 pos2 = float4(mul(_VMain, mul(unity_ObjectToWorld, float4(pos4d.xyz, 1))).xyz,pos4d.w);
 	if (unity_StereoEyeIndex == 0) {
 		o.position = mul(UNITY_MATRIX_P, float4(mul(_Tilt4D_LeftEye,pos2).xyz,1));
 	} else {

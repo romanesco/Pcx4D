@@ -9,6 +9,7 @@ namespace Pcx4D
     {
         [SerializeField] int numPoints = 256;
         [SerializeField] float offset = 0f;
+        [SerializeField] float size = 1f;
         public bool chiral = false;
 
         // convert an element in S^2 to RP^2
@@ -72,8 +73,8 @@ namespace Pcx4D
                         col = Color.white;
                     }
 
-                    vs.Add(new Vector3(q.x, q.y, q.z));
-                    uvs.Add(new Vector2(q.w, 0f));
+                    vs.Add(new Vector3(q.x, q.y, q.z) * size);
+                    uvs.Add(new Vector2(q.w, 0f) * size);
                     cols.Add(col);
                  
                 }

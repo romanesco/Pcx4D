@@ -22,7 +22,8 @@ Material:
     m_Floats:
     - _Chiral: 0
     - _Distance: 1
-    - _PointSize: 0.01
+    - _DstFactor: 10
+    - _PointSize: 0.005
     m_Colors:
     - _Tint: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _Translation4D: {r: 0, g: 0, b: 0, a: 0}

@@ -9,6 +9,7 @@ namespace Pcx4D
     {
         [SerializeField] int numPoints = 1000;
         [SerializeField] float offset = 0f;
+        [SerializeField] float size = 1f;
         public int objectDimension = 4;
         public int faceDimension = 1;
         public bool chiral = false;
@@ -75,8 +76,8 @@ namespace Pcx4D
                                 v[k] = (Random.value < 0.5) ? -1 : 1;
                             }
                         }
-                        vs.Add(new Vector3(v.x, v.y, v.z));
-                        uvs.Add(new Vector2((chiral ? -1 : 1) * v.w, 0));
+                        vs.Add(new Vector3(v.x, v.y, v.z) * size);
+                        uvs.Add(new Vector2((chiral ? -1 : 1) * v.w, 0) * size);
                         cols.Add((v.x + 1) / 2 * color1 + (v.y + 1) / 2 * color2 + (v.z + 1) / 2 * color3 + (v.w + 1) / 2 * color4);
                     }
                 }

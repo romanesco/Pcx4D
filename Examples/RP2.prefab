@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   numPoints: 256
   offset: 0
+  size: 1
   chiral: 0
 --- !u!33 &8293495081660194617
 MeshFilter:

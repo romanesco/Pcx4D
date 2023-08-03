@@ -9,6 +9,15 @@ namespace Pcx4D
     {
         [SerializeField] int numPoints = 1000;
         [SerializeField] float offset = 0f;
+        [SerializeField] Vector4 scale = Vector4.one;
+        [SerializeField] Vector4 shear = Vector4.zero;
+        [SerializeField] Vector4 frustum = Vector4.zero;
+        Matrix4x4 matrix { get { return new Matrix4x4(
+            new Vector4(scale.x, shear.x, 0, 0),
+            new Vector4(0, scale.y, shear.y, 0),
+            new Vector4(0, 0, scale.z, shear.z),
+            new Vector4(shear.w, 0, 0, scale.w)
+        );}}
         public int dimension = 1;
         public bool chiral = false;
 
@@ -72,6 +81,16 @@ namespace Pcx4D
                                 v[k] = (Random.value < 0.5) ? -1 : 1;
                             }
                         }
+                        Vector4 reg = v;
+                        for (int k = 0; k < 4; k++)
+                        {
+                            for (int j = 0; j < 4; j++)
+                            {
+                                if (k == j) continue;
+                                v[k] *= 1 + reg[j] * frustum[j];
+                            }
+                        }
+                        v = matrix * v;
                         vs.Add(new Vector3(v.x, v.y, v.z));
                         uvs.Add(new Vector2((chiral ? -1 : 1) * v.w, 0));
                         if (useSingleColor)

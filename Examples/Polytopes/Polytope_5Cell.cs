@@ -8,6 +8,7 @@ public class Polytope_5Cell : MonoBehaviour
 
     [SerializeField] bool _initialized = false;
     [SerializeField] int numPoints = 100;
+    [SerializeField] float[] scale = new float[5] { 1, 1, 1, 1, 1 };
     public int dimension = 1;
 
     private static readonly float RADIUS = Mathf.Sqrt(3.2f); // normalize the original radius to 1
@@ -17,6 +18,7 @@ public class Polytope_5Cell : MonoBehaviour
       new Vector4(-1, 1, -1, -sq5inv)/RADIUS,
       new Vector4(-1, -1, 1, -sq5inv)/RADIUS,
       new Vector4(0, 0, 0, Mathf.Sqrt(5) - sq5inv)/RADIUS };
+    Vector4 vScaled(int i) { return scale[i] * vertices[i]; }
 
     [SerializeField] Color color1 = new Color32(255, 75, 0, 0);
     [SerializeField] Color color2 = new Color32(255, 241, 0, 0);
@@ -41,8 +43,8 @@ public class Polytope_5Cell : MonoBehaviour
             for (int i = 0; i < 5; i++)
             {
                 // vertices only
-                vs.Add(new Vector3(vertices[i].x, vertices[i].y, vertices[i].z));
-                uvs.Add(new Vector2(vertices[i].w, 0));
+                vs.Add(new Vector3(vScaled(i).x, vScaled(i).y, vScaled(i).z));
+                uvs.Add(new Vector2(vScaled(i).w, 0));
                 cols.Add(colors[i]);
             }
 
@@ -55,7 +57,7 @@ public class Polytope_5Cell : MonoBehaviour
                 {
                     for (int k = 0; k < n; k++)
                     {
-                        Vector4 v = vertices[i] + (vertices[j] - vertices[i]) * (k / (float)n);
+                        Vector4 v = vScaled(i) + (vScaled(j) - vScaled(i)) * (k / (float)n);
                         Color col = colors[i] + (colors[j] - colors[i]) * (k / (float)n);
                         vs.Add(v);
                         uvs.Add(new Vector2(v.w, 0));
@@ -100,7 +102,7 @@ public class Polytope_5Cell : MonoBehaviour
                 // interpolate
                 for (int i = 0; i < 5; i++)
                 {
-                    v += t[i] * vertices[i];
+                    v += t[i] * vScaled(i);
                     col += t[i] * colors[i];
                     vs.Add(v);
                     uvs.Add(new Vector2(v.w, 0));

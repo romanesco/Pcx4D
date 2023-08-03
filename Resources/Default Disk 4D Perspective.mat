@@ -20,9 +20,10 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Floats:
+    - _Chiral: 0
     - _Distance: 1
     - _FoV: 90
-    - _PointSize: 0.01
+    - _PointSize: 0.005
     m_Colors:
     - _Camera4D: {r: 0, g: 0, b: 0, a: 10}
     - _Tint: {r: 0.5, g: 0.5, b: 0.5, a: 1}

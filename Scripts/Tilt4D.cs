@@ -61,6 +61,11 @@ namespace Pcx4D
             GetComponent<Renderer>().sharedMaterial.SetMatrix("_Tilt4D_RightEye", _tilt4D_RightEye);
 
         }
+
+        void Update()
+        {
+            GetComponent<Renderer>().sharedMaterial.SetMatrix("_VMain", Camera.main.worldToCameraMatrix);
+        }
     }
 
 }

@@ -7,6 +7,15 @@ namespace Pcx4D
 {
     public class HypercubeVertices : MonoBehaviour
     {
+        [SerializeField] Vector4 scale = Vector4.one;
+        [SerializeField] Vector4 shear = Vector4.zero;
+        [SerializeField] Vector4 frustum = Vector4.zero;
+        Matrix4x4 matrix { get { return new Matrix4x4(
+            new Vector4(scale.x, shear.x, 0, 0),
+            new Vector4(0, scale.y, shear.y, 0),
+            new Vector4(0, 0, scale.z, shear.z),
+            new Vector4(shear.w, 0, 0, scale.w)
+        );}}
         public bool useSingleColor = false;
         public Color singleColor = Color.white;
 
@@ -24,6 +33,16 @@ namespace Pcx4D
                 }
                 p = 2 * p - new Vector4(1, 1, 1, 1);
                 //Debug.Log(p);
+                Vector4 reg = p;
+                for (int k = 0; k < 4; k++)
+                {
+                    for (int j = 0; j < 4; j++)
+                    {
+                        if (k == j) continue;
+                        p[k] *= 1 + reg[j] * frustum[j];
+                    }
+                }
+                p = matrix * p;
 
                 vs.Add(new Vector3(p.x, p.y, p.z));
                 uvs.Add(new Vector2(p.w, 0f));
