@@ -11,6 +11,8 @@ float _PointSize;
 float4x4 _Transform;
 float _Chiral;
 
+int _RightEye;
+
 float4x4 _Rotation4D, _Tilt4D_LeftEye, _Tilt4D_RightEye, _VMain;
 float4 _Translation4D;
 
@@ -23,6 +25,8 @@ struct Attributes
     float4 position : POSITION;
     half3 color : COLOR;
     float2 uv2 : TEXCOORD1;
+
+    UNITY_VERTEX_OUTPUT_STEREO
 #endif
 };
 
@@ -58,6 +62,8 @@ Varyings Vertex(Attributes input)
 	float4 pos = mul(_Transform, float4(pos4d.xyz, 1));
 	half3 col = PcxDecodeColor(pt.color);
 #else
+    UNITY_SETUP_INSTANCE_ID(input);
+
     float4 pos4d = float4(input.position.xyz, _Chiral ? -input.uv2.x : input.uv2.x);
     pos4d = mul(_Rotation4D, pos4d) + _Translation4D;
     //pos4d = pos4d + _Translation4D;
@@ -80,11 +86,11 @@ Varyings Vertex(Attributes input)
     //o.position = UnityObjectToClipPos(pos);
 	// float4 pos2 = float4(UnityObjectToViewPos(pos).xyz,pos4d.w);
 	float4 pos2 = float4(mul(_VMain, mul(unity_ObjectToWorld, float4(pos4d.xyz, 1))).xyz,pos4d.w);
-	if (unity_StereoEyeIndex == 0) {
-		o.position = mul(UNITY_MATRIX_P, float4(mul(_Tilt4D_LeftEye,pos2).xyz,1));
-	} else {
-		o.position = mul(UNITY_MATRIX_P, float4(mul(_Tilt4D_RightEye,pos2).xyz,1));
-	}
+    if ( (unity_StereoEyeIndex != 0) || (_RightEye != 0) ){
+        o.position = mul(UNITY_MATRIX_P, float4(mul(_Tilt4D_RightEye,pos2).xyz+trans,1));
+    } else {
+        o.position = mul(UNITY_MATRIX_P, float4(mul(_Tilt4D_LeftEye,pos2).xyz+trans,1));
+    }
 #if !PCX_SHADOW_CASTER
     o.color = col;
     UNITY_TRANSFER_FOG(o, o.position);
