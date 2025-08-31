@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 
 
@@ -9,6 +10,9 @@ namespace Pcx4D
     {
 
         public float period = 5;
+        public bool autoRotate = true;
+        bool oldAutoRotate = true;
+
         [SerializeField] bool stopOnDisable = true;
 
         public Matrix4x4 rotation4D= Matrix4x4.identity;
@@ -18,14 +22,12 @@ namespace Pcx4D
         float offset = 0;
         float disableTime = 0;
 
-        private void OnEnable()
+        void Start()
         {
             var tempMaterial = GetComponent<Renderer>().material;
             GetComponent<Renderer>().sharedMaterial = tempMaterial;
-            if (stopOnDisable)
-            {
-                offset += Time.time - disableTime;
-            }
+
+            oldAutoRotate = autoRotate;
         }
 
         Matrix4x4 MatrixExponential(Matrix4x4 m)
@@ -63,6 +65,8 @@ namespace Pcx4D
 
         private void Update()
         {
+            if (!autoRotate) return;
+
             Matrix4x4 B = Matrix4x4.zero;
             float t = Time.deltaTime * 2 * Mathf.PI/period;
             B[0, 1] = t * angles[0];
@@ -83,13 +87,43 @@ namespace Pcx4D
             GetComponent<Renderer>().sharedMaterial.SetMatrix("_Rotation4D", rotation4D);
         }
 
-        private void OnDisable()
+        void StartRotation()
         {
+            offset += Time.time - disableTime;        
+        }
+        void StopRotation()
+        {   
             disableTime = Time.time;
         }
 
+        private void OnEnable()
+        {
+            if (stopOnDisable)
+            {
+                StartRotation();
+            }
+        }
+
+        private void OnDisable()
+        {
+            StopRotation();
+        }
+        
         void OnValidate()
         {
+            if (autoRotate != oldAutoRotate)
+            {
+                if (autoRotate)
+                {
+                    StartRotation();
+                }
+                else
+                {
+                    StopRotation();
+                }
+                oldAutoRotate = autoRotate;
+            }
+
             if (angles.Length != 6)
             {
                 Debug.LogWarning("Don't change the 'angles' field's array size!");
