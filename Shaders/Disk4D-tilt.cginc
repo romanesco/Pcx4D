@@ -87,9 +87,9 @@ Varyings Vertex(Attributes input)
 	// float4 pos2 = float4(UnityObjectToViewPos(pos).xyz,pos4d.w);
 	float4 pos2 = float4(mul(_VMain, mul(unity_ObjectToWorld, float4(pos4d.xyz, 1))).xyz,pos4d.w);
     if ( (unity_StereoEyeIndex != 0) || (_RightEye != 0) ){
-        o.position = mul(UNITY_MATRIX_P, float4(mul(_Tilt4D_RightEye,pos2).xyz+trans,1));
+        o.position = mul(UNITY_MATRIX_P, float4(mul(_Tilt4D_RightEye,pos2).xyz,1));
     } else {
-        o.position = mul(UNITY_MATRIX_P, float4(mul(_Tilt4D_LeftEye,pos2).xyz+trans,1));
+        o.position = mul(UNITY_MATRIX_P, float4(mul(_Tilt4D_LeftEye,pos2).xyz,1));
     }
 #if !PCX_SHADOW_CASTER
     o.color = col;
